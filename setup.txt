@@ -1,0 +1,4 @@
+install node.js
+npm i johnny-five
+install PingFirmata => code.txt
+install python 2.7: https://www.python.org/ftp/python/2.7/python-2.7.msi

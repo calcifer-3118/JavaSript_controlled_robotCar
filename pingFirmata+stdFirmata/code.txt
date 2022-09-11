@@ -1,0 +1,3 @@
+npm install nodebots-interchange
+
+interchange install hc-sr04 -a uno -p COM5 --firmata
