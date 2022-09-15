@@ -1,11 +1,9 @@
 const {Motor, Board, Led, Proximity, Servo } = require('johnny-five');
 const configs = Motor.SHIELD_CONFIGS.ADAFRUIT_V1;
+var keypress = require('keypress');
 require('events').EventEmitter.defaultMaxListeners = Infinity; 
 
-const board = new Board({port: 'COM5'})
-
-const keyevents = require('key-events') // Also at window.keyevents.
-var keys = keyevents() 
+const board = new Board({port: 'COM3'})
 
 board.on("ready", () => {
   
@@ -37,113 +35,79 @@ board.on("ready", () => {
     leftMotor2.stop();
 
     
+    // make `process.stdin` begin emitting "keypress" events
+    keypress(process.stdin);
+    process.stdin.resume(); 
 
 
-    // process.stdin.on('keypress', function (ch, key) {
-    //   if (key.name == 'w') {
-    //     rightMotor1.forward(255);
-    //     rightMotor2.forward(255);
-    //     leftMotor1.forward(255);
-    //     leftMotor2.forward(255);
-    //   }
-    //   else if (key.name == 's') {
-    //     rightMotor1.rev(255);
-    //     rightMotor2.rev(255);
-    //     leftMotor1.rev(255);
-    //     leftMotor2.rev(255);
-    //   }
-    //   else if (key.name == 'd') {
-    //     rightMotor1.fwd(255);
-    //     rightMotor2.fwd(255);
-    //     leftMotor1.rev(255);
-    //     leftMotor2.rev(255);
-    //   }
-    //   else if (key.name == 'a') {
-    //     rightMotor1.rev(255);
-    //     rightMotor2.rev(255);
-    //     leftMotor1.fwd(255);
-    //     leftMotor2.fwd(255);
-    //   }
-    //   if (key.name == 'v') {
-    //     rightMotor1.stop();
-    //     rightMotor2.stop();
-    //     leftMotor1.stop();
-    //     leftMotor2.stop();
-    //   }
-    // });
+    process.stdin.on('keypress', function (ch) {
+      if (ch == 'w') {
+        rightMotor1.forward(255);
+        rightMotor2.forward(255);
+        leftMotor1.forward(255);
+        leftMotor2.forward(255);
+      }
+      else if (ch == 's') {
+
+        rightMotor1.reverse(255);
+        rightMotor2.reverse(255);
+        leftMotor1.reverse(255);
+        leftMotor2.reverse(255);
+      }
+      else if (ch == 'a') {
+        rightMotor1.forward(255);
+        rightMotor2.forward(255);
+        leftMotor1.reverse(255);
+        leftMotor2.reverse(255);
+      }
+      else if (ch == 'd') {
+        rightMotor1.reverse(255);
+        rightMotor2.reverse(255);
+        leftMotor1.forward(255);
+        leftMotor2.forward(255);
+      }
+      else{
+        rightMotor1.stop();
+        rightMotor2.stop();
+        leftMotor1.stop();
+        leftMotor2.stop();
+      }
+
+    });
 
   
 
 
-    // proximity.on('change', (centimeters)=>{
+    proximity.on('change', (centimeters)=>{
 
-    //   if(centimeters.cm >= 8)
-    //   {
-    //     servo.stop();
-    //     // make `process.stdin` begin emitting "keypress" events
-    //     keypress(process.stdin);
+      if(centimeters.cm >= 8)
+      {
+        servo.stop();
 
-    //     // listen for the "keypress" event
-    //     process.stdin.on('keypress', function (ch, key) {
-    //       if (key.name == 'up') {
-    //         rightMotor1.forward(255);
-    //         rightMotor2.forward(255);
-    //         leftMotor1.forward(255);
-    //         leftMotor2.forward(255);
-    //         process.stdin.pause();
-    //       }
-    //       else if (key.name == 'down') {
-    //         rightMotor1.rev(255);
-    //         rightMotor2.rev(255);
-    //         leftMotor1.rev(255);
-    //         leftMotor2.rev(255);
-    //         process.stdin.pause();
-    //       }
-    //       else if (key.name == 'right') {
-    //         rightMotor1.fwd(255);
-    //         rightMotor2.fwd(255);
-    //         leftMotor1.rev(255);
-    //         leftMotor2.rev(255);
-    //         process.stdin.pause();
-    //       }
-    //       else if (key.name == 'left') {
-    //         rightMotor1.rev(255);
-    //         rightMotor2.rev(255);
-    //         leftMotor1.fwd(255);
-    //         leftMotor2.fwd(255);
-    //         process.stdin.pause();
-    //       }
-    //       if (key.name == 'space') {
-    //         rightMotor1.stop();
-    //         rightMotor2.stop();
-    //         leftMotor1.stop();
-    //         leftMotor2.stop();
-    //         process.stdin.pause();
-    //       }
-    //     });
- 
-    //     process.stdin.setRawMode(true);
-    //     process.stdin.resume(); 
+        process.stdin.resume(); 
 
-    //     light.stop();
-    //     light.off();
-    //   } 
-    //   else{
-    //     servo.sweep();
-    //     setTimeout(()=>{
-    //       servo.stop();
-    //     }, 5000)
+        light.stop();
+        light.off();
+      } 
+      else{
+        servo.sweep();
+        setTimeout(()=>{
+          servo.stop();
+        }, 5000)
+        
+        rightMotor1.stop();
+        rightMotor2.stop();
+        leftMotor1.stop();
+        leftMotor2.stop();
+        
+        light.on();
+        light.blink();
+        process.stdin.pause();
+      }
 
-    //     rightMotor1.stop();
-    //     rightMotor2.stop();
-    //     leftMotor1.stop();
-    //     leftMotor2.stop();
+      process.stdin.resume(); 
 
-    //     light.on();
-    //     light.blink();
-    //   }
-
-    // })
+    })
 
 
   
