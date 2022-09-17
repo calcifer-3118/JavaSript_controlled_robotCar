@@ -7,10 +7,8 @@ Can be controlled through a gameController as well as a keyboard.
 
 ## Demo
 
+https://user-images.githubusercontent.com/59198770/190876241-48c89f54-61d8-4e34-af51-8d4c1c65fbb6.mp4
 
-https://user-i
-
-Uploading Video 20220908 225254-1_Trim (2).mp4…
 
 
 
